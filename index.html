@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz : Démarche Marketing & Définition des Marchés</title>
+    <style>
+        body {
+            font-family: 'Mayan', sans-serif;
+            margin: 0;
+            background-size: cover;
+            background-attachment: fixed;
+            background-position: center;
+            background-repeat: no-repeat;
+            color: #333;
+            text-align: center;
+        }
+        .quiz-container, .summary {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            position: relative;
+            background-image: url('images/back.jpg.webp');
+            background-size: cover;
+            background-position: center;
+        }
+        .question {
+            font-size: 18px;
+            margin-bottom: 10px;
+            font-weight: bold;
+            color: #000;
+        }
+        .choices {
+            list-style: none;
+            padding: 0;
+            text-align: left;
+            margin-left: 20%;
+        }
+        .choices li {
+            margin: 8px 0;
+        }
+        button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border: none;
+            background-color: #FF0000;
+            color: white;
+            border-radius: 10px;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #CC0000;
+        }
+        .summary {
+            display: none;
+        }
+        .summary ul {
+            list-style: none;
+            padding: 0;
+        }
+        .summary li {
+            text-align: left;
+            margin-left: 20%;
+            margin-bottom: 10px;
+        }
+        .correct {
+            color: green;
+            font-weight: bold;
+        }
+        .incorrect {
+            color: red;
+            font-weight: bold;
+        }
+        .score {
+            margin-top: 20px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        @media (max-width: 768px) {
+            .quiz-container, .summary {
+                max-width: 90%;
+                margin: 20px auto;
+                padding: 15px;
+                border-radius: 10px;
+            }
+            button {
+                font-size: 14px;
+                padding: 8px 16px;
+            }
+        }
+        @media (max-width: 480px) {
+            .quiz-container, .summary {
+                padding: 10px;
+                margin: 10px;
+                border-radius: 10px;
+            }
+            .question {
+                font-size: 16px;
+            }
+            button {
+                font-size: 12px;
+                padding: 6px 12px;
+                border-radius: 10px;
+            }
+        }
+        @media (min-width: 1024px) {
+            .quiz-container, .summary {
+                max-width: 800px;
+                padding: 30px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<body>
+
+<div class="quiz-container" id="quiz-container">
+    <h2>QCM ENTRAINEMENT - Focus Groups and Quantitative Studies</h2>
+    <div id="question-container">
+        <!-- Les questions seront affichées ici dynamiquement -->
+    </div>
+    <button id="next-button" onclick="nextQuestion()">Suivant</button>
+</div>
+
+<div class="summary" id="summary">
+    <h3>Récapitulatif</h3>
+    <ul id="summary-list">
+        <!-- Le récapitulatif des réponses sera affiché ici -->
+    </ul>
+    <div class="score" id="score"></div>
+    <button onclick="restartQuiz()">Recommencer</button>
+</div>
+
+<script>
+    const quizData = [
+        { question: "What is the primary benefit of using focus groups in marketing research?", choices: ["Provides large-scale quantitative data", "Explores consumer motivations and generates new ideas through group dynamics", "Ensures completely objective and unbiased data", "Automatically collects data from store sales"], correct: 1 },
+        { question: "What is a key drawback of focus groups?", choices: ["They are inexpensive and quick to execute", "The group setting can lead to bias due to dominant participants influencing others", "They always provide representative samples of the target population", "They are limited to quantitative data collection"], correct: 1 },
+        { question: "What is the recommended size of a focus group?", choices: ["20 to 30 participants", "6 to 8 participants", "15 to 20 participants", "2 to 3 participants"], correct: 1 },
+        { question: "How do communities differ from focus groups?", choices: ["Communities are larger and engage over a longer period of time", "Communities are based on quantitative research", "Communities are conducted in-person, while focus groups are online", "Communities have fewer participants and last shorter periods"], correct: 0 },
+        { question: "Which of the following is not an advanced moderation technique in focus groups?", choices: ["Projection", "Association", "Laddering", "Interaction"], correct: 2 },
+        { question: "What is the main objective of quantitative studies in marketing?", choices: ["To explore new ideas through open-ended discussions", "To gather precise and reliable numerical data through standardized tools", "To observe consumer behavior in their natural setting", "To conduct qualitative interviews with selected respondents"], correct: 1 },
+        { question: "Which of the following is a typical method used in concept testing?", choices: ["Asking open-ended questions about brand loyalty", "Using standardized questions like interest, originality, and purchase intent", "Conducting in-depth interviews with retailers", "Analyzing historical sales data"], correct: 1 },
+        { question: "What does a sequential monadic test involve?", choices: ["Exposing respondents to multiple concepts simultaneously", "Exposing respondents to several concepts one after the other (A, then B, then C)", "Presenting a single concept to each respondent", "Conducting multiple tests on the same product"], correct: 1 },
+        { question: "What is the purpose of norms in quantitative surveys?", choices: ["To identify errors in data collection", "To rank products based on qualitative feedback", "To compare the performance of a concept to industry benchmarks using an agreement scale", "To conduct open-ended interviews with consumers"], correct: 2 },
+        { question: "Which of the following is a closed question in a survey?", choices: ["What do you think about our product?", "Would you consider buying this product? (Yes/No)", "How do you feel about the price of this product?", "Describe your experience with this brand."], correct: 1 },
+        { question: "What is the ideal scale to use in quantitative surveys for measuring attitudes or opinions?", choices: ["1 to 3-point scale", "7 ± 2 steps", "10 to 15-point scale", "A binary scale"], correct: 1 },
+        { question: "What are pre-tests used for in quantitative survey design?", choices: ["To finalize the product's features", "To test the pricing of a product in the market", "To identify and mitigate errors in the questionnaire before full deployment", "To conduct a large-scale study before launching the actual survey"], correct: 2 },
+        { question: "Which type of question provides rich, detailed responses but is harder to analyze?", choices: ["Closed questions", "Semi-open questions", "Open-ended questions", "Multiple-choice questions"], correct: 2 },
+        { question: "In concept screening, what is the goal of the process?", choices: ["To choose the best product packaging", "To rank concepts based on uniqueness and consumer interest", "To increase the sales of a product", "To conduct a brand loyalty test"], correct: 1 },
+        { question: "What is a semantic differential scale?", choices: ["A tool used for measuring purchase intent", "A scale that uses opposite adjectives (e.g., good-bad) to measure attitudes", "A method for identifying product quality", "A scale that forces a neutral response"], correct: 1 },
+        { question: "What are the two key aspects of questionnaire design in quantitative research?", choices: ["Formatting and selecting the right number of respondents", "Order of questions and types of scales used", "Creating sales forecasts and analyzing competitor data", "Conducting focus groups and sending out invitations"], correct: 1 },
+        { question: "Which technique in focus groups allows participants to freely associate thoughts with a brand or concept?", choices: ["Projection", "Laddering", "Co-creation", "Interaction"], correct: 0 },
+        { question: "In quantitative research, which question type requires respondents to choose from pre-coded answers with an 'other' option?", choices: ["Closed questions", "Semi-open questions", "Open-ended questions", "Dichotomous questions"], correct: 1 },
+        { question: "What is the primary function of filter questions in a survey?", choices: ["To exclude irrelevant respondents from certain parts of the questionnaire", "To collect demographic data", "To increase the difficulty of the questionnaire", "To identify promotional strategies"], correct: 0 },
+        { question: "Which of the following is an example of bias in question formulation?", choices: ["Use of neutral language", "Asking questions that induce a specific response", "Asking clear and concise questions", "Pre-testing a questionnaire"], correct: 1 }
+    ];
+
+    let currentQuestionIndex = 0;
+    let selectedAnswers = [];
+
+    function loadQuestion() {
+        const container = document.getElementById('question-container');
+        container.innerHTML = '';
+
+        const questionData = quizData[currentQuestionIndex];
+        const questionElem = document.createElement('div');
+        questionElem.className = 'question';
+        questionElem.textContent = questionData.question;
+
+        const choicesElem = document.createElement('ul');
+        choicesElem.className = 'choices';
+
+        questionData.choices.forEach((choice, index) => {
+            const choiceElem = document.createElement('li');
+            const choiceInput = document.createElement('input');
+            choiceInput.type = 'radio';
+            choiceInput.name = 'choice';
+            choiceInput.value = index;
+            choiceInput.id = `choice${index}`;
+            
+            const choiceLabel = document.createElement('label');
+            choiceLabel.htmlFor = `choice${index}`;
+            choiceLabel.textContent = choice;
+
+            choiceElem.appendChild(choiceInput);
+            choiceElem.appendChild(choiceLabel);
+            choicesElem.appendChild(choiceElem);
+        });
+
+        container.appendChild(questionElem);
+        container.appendChild(choicesElem);
+    }
+
+    function nextQuestion() {
+        const selectedChoice = document.querySelector('input[name="choice"]:checked');
+        if (!selectedChoice) {
+            alert("Veuillez sélectionner une réponse !");
+            return;
+        }
+
+        selectedAnswers.push(parseInt(selectedChoice.value));
+        currentQuestionIndex++;
+
+        if (currentQuestionIndex < quizData.length) {
+            loadQuestion();
+        } else {
+            showSummary();
+        }
+    }
+
+    function showSummary() {
+        document.getElementById('quiz-container').style.display = 'none';
+        const summary = document.getElementById('summary');
+        summary.style.display = 'block';
+
+        const summaryList = document.getElementById('summary-list');
+        summaryList.innerHTML = '';
+
+        let correctAnswers = 0;
+
+        quizData.forEach((q, index) => {
+            const summaryItem = document.createElement('li');
+            summaryItem.innerHTML = `
+                <strong>${q.question}</strong><br>
+                <div style="text-align: left; margin-left: 20%;">
+                    Votre réponse: ${q.choices[selectedAnswers[index]]} - 
+                    ${selectedAnswers[index] === q.correct ? '<span class="correct">Correct</span>' : '<span class="incorrect">Incorrect</span>'}<br>
+                    Bonne réponse: ${q.choices[q.correct]}
+                </div>
+            `;
+            summaryList.appendChild(summaryItem);
+            if (selectedAnswers[index] === q.correct) {
+                correctAnswers++;
+            }
+        });
+
+        document.getElementById('score').textContent = `Score: ${correctAnswers} / ${quizData.length}`;
+    }
+
+    function restartQuiz() {
+        currentQuestionIndex = 0;
+        selectedAnswers = [];
+        document.getElementById('summary').style.display = 'none';
+        document.getElementById('quiz-container').style.display = 'block';
+        loadQuestion();
+    }
+
+    loadQuestion();
+</script>
+
+</body>
+
+
+</html>
